@@ -1,29 +1,24 @@
 #!/bin/bash
 
 self=`basename $0 .sh`
-log=trasfer.log
+log=transfer.log
 
 function logger
 {
-	d=`date +%m%d-%H%M%S.%N`
-	echo $@
+	d=`date +%m.%d-%H:%M:%S.%N`
 	echo -e "${d}\t${self}\t$@" >> $log
 }
 
 case "$ACTION" in
 	init)
 		logger "INIT"
-		# exit 1 # non-null exit to make gphoto2 call fail
 	;;
 	start)
 		logger "START"
 	;;
 	download)
-		logger "DOWNLOADING ${ARGUMENT}"
-		d=`date +%m%d-%H%M%S.%N`
-		name="${d}_${self}.jpg"
-		mv $ARGUMENT $name
-		logger "DOWLOADED ${ARGUMENT} to ${name}"
+		name=`jhead -nf"%m%d-%H%M%S-${self}" ${ARGUMENT} | grep -ioE "([0-9a-z_-]*)\.jpg$"`
+		logger "DOWLOADED: ${name}"
 	;;
 	stop)
 		logger "STOP"
