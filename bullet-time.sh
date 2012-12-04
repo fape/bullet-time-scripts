@@ -22,6 +22,8 @@ function dequeue
 #register to events
 trap "dequeue; exit" INT TERM EXIT
 
+DB=0
+
 while read line
 do
 	port=`echo ${line} | egrep -o "usb:([0-9])*,([0-9])*"`
@@ -32,19 +34,19 @@ do
 		camera=`echo ${line} | sed -e "s/\(.*\)\(${port}\)/\1/g" -e "s/^\s*//g" -e "s/\s*$//g"`
 	
 		#check camera name	
-		if [ "x" == "x${camera}" ];
+		if [ ! -n "${camera}" ];
 		then
-			echo "Unsupported camera on ${port}" 1>&2
+			echo "WARNING: Unsupported camera on ${port}" 1>&2
 			continue
 		fi
 		 
 		user=`gphoto2 --get-config "${OWNER_CONFIG}" --port "${port}" --camera "${camera}"| sed -ne "s/Current:\(.*\)/\1/p" | sed -e "s/^\s*//g" -e "s/\s*$//g"`
 		
 		#check user name, use generated if no user information
-		if [ "x" == "x${user}" ];
+		if [ ! -n "${user}" ];
 		then
 			user=`tr -dc A-Za-z0-9_ < /dev/urandom | head -c8`
-			echo "Use generated name: ${user} on ${camera}, ${port}" 1>&2
+			echo "WARNING: Use generated name: ${user} on ${camera}, ${port}" 1>&2
 		fi
 		
 		echo -e "${user}\t${camera}\t${port}"
@@ -59,14 +61,20 @@ do
 		gphoto2 --capture-tethered --force-overwrite --hook-script "${user}" --camera "${camera}"  --port "${port}" &>/dev/null &
 		#save pid
 		QUEUE="${QUEUE} $!"
+		
+		let DB=DB+1
 	fi
 done < <(gphoto2 --auto-detect) # avoid subshell http://stackoverflow.com/questions/4667509/problem-accessing-a-global-variable-from-within-a-while-loop
 
-
-echo "Waiting for images...."
-
-#waiting for childens
-wait
+if [ $DB -gt 0 ];
+then
+	echo "${DB} camera detected"
+	echo "Waiting for images...."
+	#waiting for childrens
+	wait
+else
+	echo "ERROR: No camera detected" 1>&2
+fi
 
 #unregister events
 trap - INT TERM EXIT
