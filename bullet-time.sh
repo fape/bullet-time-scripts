@@ -19,6 +19,11 @@ function dequeue
 	done
 }
 
+#detect dependencies
+command -v gphoto2 >/dev/null 2>&1 || { echo 1>&2 "ERROR: I require gphoto2 but it's not installed."; exit 1; }
+command -v jhead   >/dev/null 2>&1 || { echo 1>&2 "ERROR: I require jhead but it's not installed.";   exit 1; }
+
+
 #register to events
 trap "dequeue; exit" INT TERM EXIT
 
