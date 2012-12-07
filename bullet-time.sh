@@ -31,7 +31,7 @@ do
 	#check port
 	if [ "$port" ]; 
 	then
-		camera=`echo ${line} | sed -e "s/\(.*\)\(${port}\)/\1/g" -e "s/^\s*//g" -e "s/\s*$//g"`
+		camera=`echo ${line} | sed -e "s/\(.*\)\(${port}\)/\1/g" -e "s/^\s\+//g" -e "s/\s\+$//g"`
 	
 		#check camera name	
 		if [ ! -n "${camera}" ];
@@ -40,8 +40,7 @@ do
 			continue
 		fi
 		 
-		user=`gphoto2 --get-config "${OWNER_CONFIG}" --port "${port}" --camera "${camera}"| sed -ne "s/Current:\(.*\)/\1/p" | sed -e "s/^\s*//g" -e "s/\s*$//g"`
-		
+		user=`gphoto2 --get-config "${OWNER_CONFIG}" --port "${port}" --camera "${camera}"| sed -ne "s/Current:\(.*\)/\1/p" | sed -e "s/^\s\+//g" -e "s/\s\+$//g" -e "s/\s\+/_/g"`
 		#check user name, use generated if no user information
 		if [ ! -n "${user}" ];
 		then
@@ -70,7 +69,7 @@ if [ $DB -gt 0 ];
 then
 	echo "${DB} camera detected"
 	echo "Waiting for images...."
-	#waiting for childrens
+	#waiting for children
 	wait
 else
 	echo "ERROR: No camera detected" 1>&2
