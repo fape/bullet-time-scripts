@@ -13,6 +13,9 @@ QUEUE=""
 
 function dequeue
 {
+	echo ""
+	echo "Stopping..."
+
 	for PID in ${QUEUE}
 	do
 		kill -INT ${PID}
@@ -25,7 +28,7 @@ command -v jhead   >/dev/null 2>&1 || { echo 1>&2 "ERROR: I require jhead but it
 
 
 #register to events
-trap "dequeue; exit" INT TERM EXIT
+trap "dequeue" INT TERM EXIT
 
 DB=0
 
@@ -45,7 +48,8 @@ do
 			continue
 		fi
 		 
-		user=`gphoto2 --get-config "${OWNER_CONFIG}" --port "${port}" --camera "${camera}"| sed -ne "s/Current:\(.*\)/\1/p" | sed -e "s/^\s\+//g" -e "s/\s\+$//g" -e "s/\s\+/_/g"`
+		user=`gphoto2 --get-config "${OWNER_CONFIG}" --port "${port}" --camera "${camera}" | \
+			 sed -ne "s/Current:\(.*\)/\1/p" | sed -e "s/^\s\+//g" -e "s/\s\+$//g" -e "s/\s\+/_/g"`
 		#check user name, use generated if no user information
 		if [ ! -n "${user}" ];
 		then
@@ -62,13 +66,15 @@ do
 		fi
 		
 		#send to background
-		gphoto2 --capture-tethered --force-overwrite --hook-script "${user}" --camera "${camera}"  --port "${port}" &>/dev/null &
+		gphoto2 --capture-tethered --force-overwrite --hook-script "${user}" \
+			--camera "${camera}" --port "${port}" --filename "${user}_%04n.%C" &>/dev/null &
 		#save pid
 		QUEUE="${QUEUE} $!"
 		
 		let DB=DB+1
 	fi
-done < <(gphoto2 --auto-detect) # avoid subshell http://stackoverflow.com/questions/4667509/problem-accessing-a-global-variable-from-within-a-while-loop
+done < <(gphoto2 --auto-detect) 
+# avoid subshell http://stackoverflow.com/questions/4667509/problem-accessing-a-global-variable-from-within-a-while-loop
 
 if [ $DB -gt 0 ];
 then

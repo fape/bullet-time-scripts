@@ -18,7 +18,7 @@ case "$ACTION" in
 	;;
 	download)
 		name=`jhead -nf"%m%d-%H%M%S-${self}" ${ARGUMENT} | grep -ioE "([0-9a-z_-]*)\.jpg$"`
-		logger "DOWLOADED: ${name}"
+		logger "DOWLOADED: ${name} (${ARGUMENT})"
 	;;
 	stop)
 		logger "STOP"
