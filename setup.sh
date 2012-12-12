@@ -3,8 +3,8 @@
 ######################################################################
 #                                                                    #
 #  See documentation on https://github.com/fape/bullet-time-scripts  #
-#		Make sure to read the setup.readme                   #
-#								     #
+#                   Make sure to read the setup.readme               #
+#                                                                    #
 ######################################################################
 
 ISO="/main/imgsettings/iso"
