@@ -83,4 +83,4 @@ set_camera_config ${ISO} "Iso" ${NEXTMSG}
 set_camera_config ${APERTURE} "Aperture" ${NEXTMSG}
 set_camera_config ${SHUTTER_SPEED} "Shutter speed" ${NEXTMSG}
 set_camera_config ${WHITEBALANCE} "White balance" ${NEXTMSG}
-set_camera_ownername ${OWNERNAME} "Ownername" ${NEXTMSG}
+set_camera_ownername ${OWNERNAME} "Ownername"
