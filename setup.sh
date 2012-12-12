@@ -16,32 +16,44 @@ IMGFORMAT="/main/imgsettings/imageformat"
 OWNERNAME="/main/settings/ownername"
 GET="--get-config"
 SET="--set-config"
+NEXTMSG="Ok, next"
 
-OIFS=$IFS # save default value
-IFS=";"
-PS3="Type a number: "
+function set_camera_config()
+{
+	CONFIGNAME=$1
+	DISPLAYNAME=$2
+	EXTMSG="Quit"
+	if [ -n "$3" ]; then
+		EXTMSG=$3
+	fi
 
-INPUT=`LANG=C gphoto2 $GET $IMGFORMAT` 
-DATA=`echo ${INPUT}| grep "Choice" | sed "s/Choice: \([0-9]\)\+ \(\([a-zA-Z]\)\+\)/\2/g" | tr "\\n" ";"; echo  "Quit" `
-CURRENT=`echo ${INPUT} | grep "Current"`
-OPTIONLENGHT=`echo "$DATA" | grep -o ";" | wc -l`
+	INPUT=`LANG=C gphoto2 $GET $CONFIGNAME` 
+	DATAS=`echo ${INPUT}| grep "Choice" | sed "s/Choice: \([0-9]\)\+ \(\([a-zA-Z]\)\+\)/\2/g" | tr "\\n" ";"; echo "${EXTMSG}" `
+	CURRENT=`echo ${INPUT} | grep "Current"`
+	OPTIONLENGHT=`echo "${DATAS}" | grep -o ";" | wc -l`
 
-echo "Choose Image format:"
-echo "$CURRENT"
+	echo "Choose ${DISPLAYNAME}:"
+	echo "${CURRENT}"
 
-select value in ${DATA}; do
-        if [ -n "${value}" ]; then
-                echo "${value} selected"
+	PS3="Type a number: "
+	OIFS=$IFS # save default value
+	IFS=";"
 
-		if [ $REPLY -le $OPTIONLENGHT ]; then
-		((REPLY--))	
-		gphoto2 $SET $IMGFORMAT=$REPLY
-		
+	select value in ${DATAS}; do
+        	if [ -n "${value}" ]; then
+                	echo "${value} selected"
+
+			if [ $REPLY -le $OPTIONLENGHT ]; then
+			((REPLY--))	
+			gphoto2 $SET $CONFIGNAME=$REPLY		
+			fi
+			break
 		fi
-		break
-        fi
 
-done
+	done
 
-IFS=$OIFS
+	IFS=$OIFS
+}
 
+set_camera_config ${IMGFORMAT} "Image format" ${NEXTMSG}
+set_camera_config ${ISO} "Iso"
