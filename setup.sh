@@ -16,7 +16,7 @@ IMGFORMAT="/main/imgsettings/imageformat"
 OWNERNAME="/main/settings/ownername"
 GET="--get-config"
 SET="--set-config"
-NEXTMSG="Ok, next"
+NEXTMSG="Next"
 
 function set_camera_config()
 {
@@ -28,12 +28,13 @@ function set_camera_config()
 	fi
 
 	INPUT=`LANG=C gphoto2 $GET $CONFIGNAME` 
-	DATAS=`echo ${INPUT}| grep "Choice" | sed "s/Choice: \([0-9]\)\+ \(\([a-zA-Z]\)\+\)/\2/g" | tr "\\n" ";"; echo "${EXTMSG}" `
-	CURRENT=`echo ${INPUT} | grep "Current"`
+	DATAS=`echo "${INPUT}" | grep "Choice" | sed "s/Choice: \([0-9]\)\+ \(\([a-zA-Z]\)\+\)/\2/g" | tr "\\n" ";"; echo "${EXTMSG}" `
+	CURRENT=`echo "${INPUT}" | grep "Current"`
 	OPTIONLENGHT=`echo "${DATAS}" | grep -o ";" | wc -l`
 
 	echo "Choose ${DISPLAYNAME}:"
 	echo "${CURRENT}"
+
 
 	PS3="Type a number: "
 	OIFS=$IFS # save default value
@@ -56,4 +57,4 @@ function set_camera_config()
 }
 
 set_camera_config ${IMGFORMAT} "Image format" ${NEXTMSG}
-set_camera_config ${ISO} "Iso"
+set_camera_config ${ISO} "Iso" ${NEXTMSG}
