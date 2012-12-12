@@ -61,10 +61,6 @@ function set_camera_ownername()
 {
         CONFIGNAME=$1
         DISPLAYNAME=$2
-        EXTMSG="Quit"
-        if [ -n "$3" ]; then
-                EXTMSG=$3
-        fi
 
 
 	INPUT=`LANG=C gphoto2 $GET $CONFIGNAME`
@@ -72,7 +68,7 @@ function set_camera_ownername()
 	
 	echo "Choose ${DISPLAYNAME}:"
 	echo "${CURRENT}"
-	echo "Enter the desired ownername:(enter 0 to skip)"
+	echo "Enter the desired ownername(enter 0 to skip):"
 	read NAME
 	if [ $NAME != "0" ]; then
 	gphoto2 $SET $OWNERNAME="$NAME"
