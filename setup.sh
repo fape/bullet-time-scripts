@@ -10,7 +10,7 @@
 ISO="/main/imgsettings/iso"
 APERTURE="/main/capturesettings/aperture"
 SHUTTER_SPEED="/main/capturesettings/shutterspeed"
-WHITEBALACE="/main/imgsettings/whitebalance"
+WHITEBALANCE="/main/imgsettings/whitebalance"
 SYNCTIME="/main/actions/syncdatetime=1"
 IMGFORMAT="/main/imgsettings/imageformat"
 OWNERNAME="/main/settings/ownername"
@@ -43,6 +43,7 @@ function set_camera_config()
 	select value in ${DATAS}; do
         	if [ -n "${value}" ]; then
                 	echo "${value} selected"
+			echo -e "\n====================================================================="
 
 			if [ $REPLY -le $OPTIONLENGHT ]; then
 			((REPLY--))	
@@ -56,5 +57,34 @@ function set_camera_config()
 	IFS=$OIFS
 }
 
+function set_camera_ownername()
+{
+        CONFIGNAME=$1
+        DISPLAYNAME=$2
+        EXTMSG="Quit"
+        if [ -n "$3" ]; then
+                EXTMSG=$3
+        fi
+
+
+	INPUT=`LANG=C gphoto2 $GET $CONFIGNAME`
+	CURRENT=`echo "${INPUT}" | grep "Current"`
+	
+	echo "Choose ${DISPLAYNAME}:"
+	echo "${CURRENT}"
+	echo "Enter the desired ownername:(enter 0 to skip)"
+	read NAME
+	if [ $NAME != "0" ]; then
+	gphoto2 $SET $OWNERNAME="$NAME"
+	
+	fi
+
+}
+
+
 set_camera_config ${IMGFORMAT} "Image format" ${NEXTMSG}
 set_camera_config ${ISO} "Iso" ${NEXTMSG}
+set_camera_config ${APERTURE} "Aperture" ${NEXTMSG}
+set_camera_config ${SHUTTER_SPEED} "Shutter speed" ${NEXTMSG}
+set_camera_config ${WHITEBALANCE} "White balance" ${NEXTMSG}
+set_camera_ownername ${OWNERNAME} "Ownername" ${NEXTMSG}
