@@ -12,6 +12,7 @@ APERTURE="/main/capturesettings/aperture"
 SHUTTER_SPEED="/main/capturesettings/shutterspeed"
 WHITEBALANCE="/main/imgsettings/whitebalance"
 SYNCTIME="/main/actions/syncdatetime=1"
+GETTIME="/main/settings/datetime"
 IMGFORMAT="/main/imgsettings/imageformat"
 OWNERNAME="/main/settings/ownername"
 GET="--get-config"
@@ -60,8 +61,8 @@ function set_camera_config()
 function set_camera_ownername()
 {
         CONFIGNAME=$1
-        DISPLAYNAME=$2
-
+	DISPLAYNAME=$2
+	
 
 	INPUT=`LANG=C gphoto2 $GET $CONFIGNAME`
 	CURRENT=`echo "${INPUT}" | grep "Current"`
@@ -77,6 +78,25 @@ function set_camera_ownername()
 
 }
 
+function sync_time()
+{
+        CONFIGNAME=$1
+	
+	INPUT=`LANG=C gphoto2 $GET $CONFIGNAME`
+        CURRENT=`echo "${INPUT}" | grep "Printable" | sed "s/Printable://"`
+	DATE=`LANG=C date`
+
+        echo "Do you want to synchronise time?"
+        echo "Current time on camera:   ${CURRENT}"
+	echo "Current time on PC:        ${DATE}"
+        echo "Enter \"yes\" to do so"
+        read YES
+        if [ $YES == "yes" ]; then
+        gphoto2 $SET $SYNCTIME
+
+        fi
+
+}
 
 set_camera_config ${IMGFORMAT} "Image format" ${NEXTMSG}
 set_camera_config ${ISO} "Iso" ${NEXTMSG}
@@ -84,3 +104,4 @@ set_camera_config ${APERTURE} "Aperture" ${NEXTMSG}
 set_camera_config ${SHUTTER_SPEED} "Shutter speed" ${NEXTMSG}
 set_camera_config ${WHITEBALANCE} "White balance" ${NEXTMSG}
 set_camera_ownername ${OWNERNAME} "Ownername"
+sync_time ${GETTIME}
