@@ -3,7 +3,6 @@
 ######################################################################
 #                                                                    #
 #  See documentation on https://github.com/fape/bullet-time-scripts  #
-#                   Make sure to read the setup.readme               #
 #                                                                    #
 ######################################################################
 
@@ -19,7 +18,7 @@ GET="--get-config"
 SET="--set-config"
 NEXTMSG="Next"
 
-function set_camera_config()
+function camera_config()
 {
 	CONFIGNAME=$1
 	DISPLAYNAME=$2
@@ -36,17 +35,16 @@ function set_camera_config()
 	echo "Choose ${DISPLAYNAME}:"
 	echo "${CURRENT}"
 
-
 	PS3="Type a number: "
 	OIFS=$IFS # save default value
 	IFS=";"
 
 	select value in ${DATAS}; do
         	if [ -n "${value}" ]; then
-			if [ $REPLY -le $OPTIONLENGHT ]; then
+			if [ ${REPLY} -le ${OPTIONLENGHT} ]; then
 	                	echo "${value} selected"
 				((REPLY--))	
-				LANG=C gphoto2 --port $PORT $SET $CONFIGNAME="$REPLY"
+				gphoto2 --port "${PORT}" ${SET} ${CONFIGNAME}="${REPLY}" &>/dev/null
 			fi
 			echo -e "\n====================================================================="
 		fi
@@ -56,12 +54,12 @@ function set_camera_config()
 	IFS=$OIFS
 }
 
-function set_camera_ownername()
+function camera_ownername()
 {
         CONFIGNAME=$1
 	DISPLAYNAME=$2
 
-	INPUT=`LANG=C gphoto2 --port $PORT $GET $CONFIGNAME`
+	INPUT=`LANG=EN gphoto2 --port "${PORT}" ${GET} ${CONFIGNAME}`
 	CURRENT=`echo "${INPUT}" | grep "Current"`
 	
 	echo "Choose ${DISPLAYNAME}:"
@@ -69,8 +67,7 @@ function set_camera_ownername()
 	echo "Enter the desired ownername(enter 0 to skip):"
 	read NAME
 	if [ $NAME != "0" ]; then
-	LANG=C gphoto2 --port $PORT $SET $OWNERNAME="$NAME"
-	
+		gphoto2 --port "${PORT}" ${SET} ${OWNERNAME}="${NAME}" &>/dev/null
 	fi
 
 }
@@ -79,7 +76,7 @@ function sync_time()
 {
         CONFIGNAME=$1
 
-	INPUT=`LANG=C gphoto2 --port $PORT $GET $CONFIGNAME`
+	INPUT=`LANG=EN gphoto2 --port "${PORT}" ${GET} ${CONFIGNAME}`
         CURRENT=`echo "${INPUT}" | grep "Printable" | sed "s/Printable://"`
 	DATE=`LANG=C date`
 
@@ -89,15 +86,14 @@ function sync_time()
         echo "Enter \"yes\" to do so"
         read YES
         if [ $YES == "yes" ]; then
-        LANG=C gphoto2 --port $PORT $SET $SYNCTIME
-
+        	gphoto2 --port "${PORT}" ${SET} ${SYNCTIME} &>/dev/null
         fi
 
 }
 
 function camera_select()
 {
-	DEVICES=`LANG=C gphoto2 --auto-detect | grep "Canon EOS" | tr "\\n" ";"`
+	DEVICES=`LANG=EN gphoto2 --auto-detect | grep "Canon EOS" | tr "\\n" ";"`
 	PS3="Type a number: "
 	OIFS=$IFS # save default value
 	IFS=";"
@@ -112,16 +108,17 @@ function camera_select()
        		        PORT=`echo "${value}" | egrep -o "usb:([0-9])*,([0-9])*"`
 			break
         	fi
-done
+	done
 	IFS=$OIFS
 }
 
 
 camera_select
-set_camera_config ${IMGFORMAT} "Image format" ${NEXTMSG}
-set_camera_config ${ISO} "Iso" ${NEXTMSG} 
-set_camera_config ${APERTURE} "Aperture" ${NEXTMSG}
-set_camera_config ${SHUTTER_SPEED} "Shutter speed" ${NEXTMSG}
-set_camera_config ${WHITEBALANCE} "White balance" ${NEXTMSG}
-set_camera_ownername ${OWNERNAME} "Ownername"
+camera_config ${IMGFORMAT} "Image format" ${NEXTMSG}
+camera_config ${ISO} "Iso" ${NEXTMSG} 
+camera_config ${APERTURE} "Aperture" ${NEXTMSG}
+camera_config ${SHUTTER_SPEED} "Shutter speed" ${NEXTMSG}
+camera_config ${WHITEBALANCE} "White balance" ${NEXTMSG}
+camera_ownername ${OWNERNAME} "Ownername"
 sync_time ${GETTIME}
+
