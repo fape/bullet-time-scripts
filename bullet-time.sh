@@ -73,7 +73,7 @@ do
 		
 		let DB=DB+1
 	fi
-done < <(gphoto2 --auto-detect) 
+done < <( LANG=EN gphoto2 --auto-detect) 
 # avoid subshell http://stackoverflow.com/questions/4667509/problem-accessing-a-global-variable-from-within-a-while-loop
 
 if [ $DB -gt 0 ];

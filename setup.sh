@@ -28,8 +28,8 @@ function set_camera_config()
 		EXTMSG=$3
 	fi
 
-	INPUT=`LANG=C gphoto2 --port $PORT $GET $CONFIGNAME` 
-	DATAS=`echo "${INPUT}" | grep "Choice" | sed "s/Choice: \([0-9]\)\+ \(\([a-zA-Z]\)\+\)/\2/g" | tr "\\n" ";"; echo "${EXTMSG}" `
+	INPUT=`LANG=EN gphoto2 --port $PORT $GET $CONFIGNAME` 
+	DATAS=`echo "${INPUT}" | grep "Choice" | sed "s/Choice: \([0-9]\)\+ \(\([a-zA-Z0-9\/]\)\+\)/\2/g" | tr "\\n" ";"; echo "${EXTMSG}" `
 	CURRENT=`echo "${INPUT}" | grep "Current"`
 	OPTIONLENGHT=`echo "${DATAS}" | grep -o ";" | wc -l`
 
@@ -43,13 +43,12 @@ function set_camera_config()
 
 	select value in ${DATAS}; do
         	if [ -n "${value}" ]; then
-                	echo "${value} selected"
-			echo -e "\n====================================================================="
-
 			if [ $REPLY -le $OPTIONLENGHT ]; then
-			((REPLY--))	
-			LANG=C gphoto2 --port $PORT $SET $CONFIGNAME="$REPLY"
+	                	echo "${value} selected"
+				((REPLY--))	
+				LANG=C gphoto2 --port $PORT $SET $CONFIGNAME="$REPLY"
 			fi
+			echo -e "\n====================================================================="
 		fi
 		break
 	done
