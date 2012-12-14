@@ -8,19 +8,41 @@
 
 OWNER_CONFIG="/main/settings/ownername"
 TRANSFER_SCRIPT="transfer.sh"
-
+PIPE="/tmp/bullet_pipe"
 QUEUE=""
+
+function read_pipe()
+{
+	while [ -p $PIPE ];
+	do
+		if read line < $PIPE;
+		then
+			echo "Downloaded: ${line}"
+		fi
+	done
+}
 
 function dequeue
 {
-	echo ""
-	echo "Stopping..."
-
 	for PID in ${QUEUE}
 	do
 		kill -INT ${PID}
 	done
 }
+
+function exit_script()
+{
+	echo ""
+	echo "Stopping..."
+
+	dequeue
+	
+	if [ -p $PIPE ]
+	then
+		rm -f $PIPE
+	fi
+}
+
 
 #detect dependencies
 command -v gphoto2 >/dev/null 2>&1 || { echo 1>&2 "ERROR: I require gphoto2 but it's not installed."; exit 1; }
@@ -28,9 +50,15 @@ command -v jhead   >/dev/null 2>&1 || { echo 1>&2 "ERROR: I require jhead but it
 
 
 #register to events
-trap "dequeue" INT TERM EXIT
+trap "exit_script" INT TERM EXIT
+
+if [ ! -p $PIPE ];
+then
+	mkfifo $PIPE
+fi
 
 DB=0
+DATA="Ownername;Camera;Port"
 
 while read line
 do
@@ -57,7 +85,7 @@ do
 			echo "WARNING: Use generated name: ${user} on ${camera}, ${port}" 1>&2
 		fi
 		
-		echo -e "${user}\t${camera}\t${port}"
+		DATA=`echo $DATA; echo "${user};${camera};${port}"`
 		
 		#link or file does NOT exist
 		if [ ! -e "${user}" ];
@@ -78,6 +106,12 @@ done < <( LANG=EN gphoto2 --auto-detect)
 
 if [ $DB -gt 0 ];
 then
+	read_pipe &
+	#save pid
+	QUEUE="${QUEUE} $!"
+
+	echo "$DATA" | column -t -s ";"
+
 	echo "${DB} camera detected"
 	echo "Waiting for images...."
 	#waiting for children
