@@ -28,7 +28,7 @@ function list_config()
                         $GET $WHITEBALANCE \
                         $GET $TIME \
                         $GET $IMGFORMAT | grep "Current:" | sed "s/Current: \(.\+\)$/\1/g" | sed "{:q;N;s/\n/;/g;t q}" | \
-                                 awk -F ";" '{ print $1 ";" $2 ";" $3 ";" $4 ";" $5 ";" strftime("%Y.%m.%d %H:%M:%S", $6) ";" $7 }'
+                                 awk -F ";" '{ print $1 ";" $2 ";" $3 ";" $4 " s;" $5 ";" strftime("%Y.%m.%d %H:%M:%S", $6) ";" $7 }'
         # http://stackoverflow.com/questions/1251999/sed-how-can-i-replace-a-newline-n
 }
 

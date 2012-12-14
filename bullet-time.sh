@@ -13,9 +13,9 @@ QUEUE=""
 
 function read_pipe()
 {
-	while [ -p $PIPE ];
+	while [ -p "${PIPE}" ];
 	do
-		if read line < $PIPE;
+		if read line < "${PIPE}";
 		then
 			echo "Downloaded: ${line}"
 		fi
@@ -24,9 +24,9 @@ function read_pipe()
 
 function dequeue
 {
-	for PID in ${QUEUE}
+	for pid in ${QUEUE}
 	do
-		kill -INT ${PID}
+		kill -INT ${pid}
 	done
 }
 
@@ -37,9 +37,9 @@ function exit_script()
 
 	dequeue
 	
-	if [ -p $PIPE ]
+	if [ -p "${PIPE}" ]
 	then
-		rm -f $PIPE
+		rm -f "${PIPE}"
 	fi
 }
 
@@ -52,9 +52,9 @@ command -v jhead   >/dev/null 2>&1 || { echo 1>&2 "ERROR: I require jhead but it
 #register to events
 trap "exit_script" INT TERM EXIT
 
-if [ ! -p $PIPE ];
+if [ ! -p "${PIPE}" ];
 then
-	mkfifo $PIPE
+	mkfifo "${PIPE}"
 fi
 
 DB=0
@@ -62,12 +62,12 @@ DATA="Ownername;Camera;Port"
 
 while read line
 do
-	port=`echo ${line} | egrep -o "usb:([0-9])*,([0-9])*"`
+	port=`echo "${line}" | egrep -o "usb:([0-9])*,([0-9])*"`
 	
 	#check port
-	if [ "$port" ]; 
+	if [ -n "$port" ]; 
 	then
-		camera=`echo ${line} | sed -e "s/\(.*\)\(${port}\)/\1/g" -e "s/^\s\+//g" -e "s/\s\+$//g"`
+		camera=`echo "${line}" | sed -e "s/\(.*\)\(${port}\)/\1/g" -e "s/^\s\+//g" -e "s/\s\+$//g"`
 	
 		#check camera name	
 		if [ ! -n "${camera}" ];
@@ -85,12 +85,12 @@ do
 			echo "WARNING: Use generated name: ${user} on ${camera}, ${port}" 1>&2
 		fi
 		
-		DATA=`echo $DATA; echo "${user};${camera};${port}"`
+		DATA=`echo "${DATA}"; echo "${user};${camera};${port}"`
 		
 		#link or file does NOT exist
 		if [ ! -e "${user}" ];
 		then	
-			ln -s ${TRANSFER_SCRIPT} "${user}"
+			ln -s "${TRANSFER_SCRIPT}" "${user}"
 		fi
 		
 		#send to background
@@ -104,13 +104,13 @@ do
 done < <( LANG=EN gphoto2 --auto-detect) 
 # avoid subshell http://stackoverflow.com/questions/4667509/problem-accessing-a-global-variable-from-within-a-while-loop
 
-if [ $DB -gt 0 ];
+if [ ${DB} -gt 0 ];
 then
 	read_pipe &
 	#save pid
 	QUEUE="${QUEUE} $!"
 
-	echo "$DATA" | column -t -s ";"
+	echo "${DATA}" | column -t -s ";"
 
 	echo "${DB} camera detected"
 	echo "Waiting for images...."
