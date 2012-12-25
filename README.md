@@ -15,9 +15,9 @@ You have to set OWNERNAME on the camera. For example: `gphoto2 --set-config /mai
 
 * Create directory
 	
-	cd ~
-	mkdir bulletdep
-	cd bulletdep
+		cd ~
+		mkdir bulletdep
+		cd bulletdep
 
 * Remove old packages
 	
