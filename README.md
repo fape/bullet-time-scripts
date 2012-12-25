@@ -13,12 +13,12 @@ You have to set OWNERNAME on the camera. For example: `gphoto2 --set-config /mai
 
 ### Compile depencies on Ubuntu or Linux Mint
 
-* Create directory
+1. Create directory
 	cd ~
 	mkdir bulletdep
 	cd bulletdep
 
-* Remove old packages
+2. Remove old packages
 	sudo apt-get remove gphoto2 libgphoto2-2 libgphoto2-l10n libgphoto2-port0 jhead
 
 * Install depencies for compile
