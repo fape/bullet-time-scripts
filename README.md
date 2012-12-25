@@ -6,6 +6,7 @@ Bullet time scripts designer for [Canon EOS](http://www.usa.canon.com/cusa/consu
 ### Precondition
 You have to set OWNERNAME on the camera. 
 For example:
+
 	gphoto2 --set-config /main/settings/ownername="owner_name"
 
 ### Depencies 
