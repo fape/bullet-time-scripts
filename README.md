@@ -1,17 +1,18 @@
 Bullet time scripts
 ===================
 
-Bullet time scripts designer for [Canon EOS](http://www.usa.canon.com/cusa/consumer/products/cameras/slr_cameras) cameras.
+Bullet time scripts designer for [Canon EOS](http://www.usa.canon.com/cusa/consumer/products/cameras/slr_cameras) DSLR cameras.
 
-## Precondition
-You have to set OWNERNAME on the camera. For example: `gphoto2 --set-config /main/settings/ownername="owner_name"`.
+### Precondition
+You have to set OWNERNAME on the camera. 
+For example: `
+	gphoto2 --set-config /main/settings/ownername="owner_name"
 
-
-## Depencies (recommended to compile from source)
+### Depencies 
 * [jhead](http://www.sentex.net/~mwandel/jhead) 
 * [gphoto2](http://www.gphoto.org)
 
-### Compile depencies on Ubuntu or Linux Mint
+#### Compile depencies on Ubuntu or Linux Mint
 
 * Create directory
 	
@@ -57,7 +58,7 @@ You have to set OWNERNAME on the camera. For example: `gphoto2 --set-config /mai
 		make
 		sudo make install
 
-* Check gphoto2
+* Check 
 
 		cd ~
 		gphoto2 --version
