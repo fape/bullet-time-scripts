@@ -1,18 +1,13 @@
 #!/bin/sh
-#update
-sudo apt-get update
-sudo apt-get -y upgrade
-
 #create dir
-cd ~
-mkdir bulletdep
-cd bulletdep
+mkdir deps
+cd deps
 
 #remove old packages
-sudo apt-get -y remove gphoto2 libgphoto2-2 libgphoto2-l10n libgphoto2-port0 jhead
+sudo apt-get remove gphoto2 libgphoto2-2 libgphoto2-l10n libgphoto2-port0 jhead
 
 #install needed packages
-sudo apt-get -y install build-essential libtool libusb-1.0-0-dev libusb-dev libjpeg-dev libexif-dev libpopt-dev liblockdev1-dev libreadline-dev libcdk5-dev libaa1-dev libgd2-xpm-dev git
+sudo apt-get install build-essential libtool libusb-1.0-0-dev libusb-dev libjpeg-dev libexif-dev libpopt-dev liblockdev1-dev libreadline-dev libcdk5-dev libaa1-dev libgd2-xpm-dev git
 
 #download sources
 wget "http://sourceforge.net/projects/gphoto/files/libgphoto/2.5.1.1/libgphoto2-2.5.1.1.tar.bz2/download" -O libgphoto2-2.5.1.1.tar.gz
@@ -25,7 +20,7 @@ echo *.tar.gz | xargs -n 1 tar -xvf
 #install libgphoto2
 cd libgphoto2-2.5.1.1
 ./configure --prefix=/usr
-make -j5
+make -j9
 sudo make install
 
 #install gphoto2

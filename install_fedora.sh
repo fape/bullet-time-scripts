@@ -1,16 +1,11 @@
 #!/bin/sh
-#update
-sudo yum update
-sudo yum -y upgrade
-
 #create dir
-cd ~
-mkdir bulletdep
-cd bulletdep
+mkdir deps
+cd deps
 
 #essential packages
 sudo yum groupinstall "Development Tools"
-sudo yum -y install git libtool-ltdl-devel libusb-devel libusb1-devel libjpeg-turbo-devel libexif-devel popt-static lockdev-devel readline-devel cdk-devel aalib-devel gd-devel
+sudo yum install git libtool-ltdl-devel libusb-devel libusb1-devel libjpeg-turbo-devel libexif-devel popt-static lockdev-devel readline-devel cdk-devel aalib-devel gd-devel
 
 #download sources 
 wget "http://sourceforge.net/projects/gphoto/files/libgphoto/2.5.1.1/libgphoto2-2.5.1.1.tar.bz2/download" -O libgphoto2-2.5.1.1.tar.gz
@@ -23,7 +18,7 @@ echo *.tar.gz | xargs -n 1 tar -xvf
 #install libgphoto2
 cd libgphoto2-2.5.1.1
 ./configure --prefix=/usr
-make -j5
+make -j9
 sudo make install
 
 #install gphoto2
