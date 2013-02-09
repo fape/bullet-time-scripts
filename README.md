@@ -13,6 +13,6 @@ For example:
 * [jhead](http://www.sentex.net/~mwandel/jhead) 
 * [gphoto2](http://www.gphoto.org)
 
-### To install gphoto2, libghpoto2 and jhead from source on Ubuntu or Linux Mint or Debian the provided install script.
+#### To install gphoto2, libghpoto2 and jhead from source on Ubuntu or Linux Mint or Debian use the provided install script.
 
 
