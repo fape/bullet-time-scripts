@@ -3,6 +3,7 @@
 self=`basename $0 .sh`
 log=transfer.log
 PIPE="/tmp/bullet_pipe"
+DIR="images"
 
 function logger
 {
@@ -18,7 +19,7 @@ case "$ACTION" in
 		logger "START"
 	;;
 	download)
-		name=`jhead -nf"%m%d-%H%M%S-${self}" ${ARGUMENT} | grep -ioE "([0-9a-z_-]*)\.jpg$"`
+		name=`jhead -nf"${DIR}/%m%d-%H%M%S-${self}" ${ARGUMENT} | grep -ioE "([0-9a-z_-]*)\.jpg$"`
 		echo "${name}" >$PIPE 
 		logger "DOWLOADED: ${name} (${ARGUMENT})"
 	;;
