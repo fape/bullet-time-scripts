@@ -81,7 +81,7 @@ do
 		#check user name, use generated if no user information
 		if [ ! -n "${user}" ];
 		then
-			user=`tr -dc A-Za-z0-9_ < /dev/urandom | head -c8`
+			user=`echo -n "rn_"; tr -dc A-Za-z0-9_ < /dev/urandom | head -c6`
 			echo "WARNING: Use generated name: ${user} on ${camera}, ${port}" 1>&2
 		fi
 		
