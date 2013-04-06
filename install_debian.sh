@@ -3,7 +3,7 @@
 mkdir deps
 cd deps
 
-$CPU=`grep -c processor /proc/cpuinfo`
+CPU=`grep -c processor /proc/cpuinfo`
 
 #remove old packages
 sudo apt-get remove gphoto2 libgphoto2-2 libgphoto2-l10n libgphoto2-port0 jhead
