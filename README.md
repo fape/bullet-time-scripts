@@ -14,8 +14,8 @@ For example:
 * [gphoto2](http://www.gphoto.org)
 
 #### To install gphoto2, libghpoto2 and jhead from source on Ubuntu or Linux Mint or Debian use the provided install script.
+
 Command line arguments:
-<code>
--t test mode (remove "0 &&" from libgphoto2 for libsubx testing)
--d create .deb packages
-</code>
+
+	-t test mode (remove "0 &&" from libgphoto2 for libsubx testing)
+	-d create .deb packages
