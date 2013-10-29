@@ -50,6 +50,7 @@ rm *.tar.gz
 
 #install libgphoto2
 cd libgphoto2
+git reset --hard
 if [ $TEST_MODE -eq 1 ]
    then
         cp camlibs/ptp2/library.c camlibs/ptp2/library.c.org
