@@ -25,7 +25,7 @@ case "$ACTION" in
 		shoot=`cat "${SHOOT_ID}"`
 		name=`jhead -nf"${DIR}/${shoot}-${id}-%m%d-%H%M%S-${self}" ${ARGUMENT} | grep -ioE "([0-9a-z_-]*)\.jpg$"`
 		echo "${name}" > $PIPE 
-		logger "DOWLOADED: ${name} (${ARGUMENT})"
+		logger "DOWNLOADED: ${name} (${ARGUMENT})"
 	;;
 	stop)
 		logger "STOP"
